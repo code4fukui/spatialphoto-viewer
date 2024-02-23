@@ -6,7 +6,7 @@
 
 <div id="info" style="position: absolute; top: .5em; left: .5em; background-color: rgba(255, 255, 255, .8); padding: .3em;">
 <a href=https://peatix.com/event/3802789?lang=ja>電脳メガネサミット2024</a> 空間写真 for Quest/VisionPro with <a href="https://threejs.org" style="color: black !important;">three.js</a><br>
-<a href=https://github.com/code4fukui/spacialphoto-viewer>src on GitHub</a><br>
+<a href=https://github.com/code4fukui/spatialphoto-viewer>src on GitHub</a><br>
 </div>
 
 <style>
@@ -32,7 +32,7 @@ import * as THREE from 'three';
 //import { VRButton } from 'three/addons/webxr/VRButton.js';
 //import { ARButton } from 'three/addons/webxr/ARButton.js';
 import { XRButton } from './XRButton.js';
-import { createSpacialPhoto } from "./createSpacialPhoto.js";
+import { createSpatialPhoto } from "./createSpatialPhoto.js";
 import { isVisionPro } from "./isVisionPro.js";
 
 //const renderer = new THREE.WebGLRenderer();
@@ -63,7 +63,7 @@ const r = 1.1;
 const w = Math.PI * .47;
 for (let i = 0; i < imgs.length; i++) {
   const img = imgs[i];
-  const photo = createSpacialPhoto(img);
+  const photo = createSpatialPhoto(img);
   const n = imgs.length - 1;
   const th = (w / n) * (i - n / 2) - Math.PI / 2;
 	photo.position.x = Math.cos(th) * r;

@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-export const createSpacialPhoto = (imgbase) => {
+export const createSpatialPhoto = (imgbase) => {
   const photo = new THREE.Group();
   for (let i = 1; i <= 2; i++) {
     const geometry = new THREE.PlaneGeometry(1, 1);
