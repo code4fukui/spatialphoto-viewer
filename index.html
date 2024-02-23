@@ -1,0 +1,109 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>電脳メガネサミット2024 空間写真 for Quest/VisionPro with three.js</title>
+<!DOCTYPE html>
+<body style="margin:0; background-color: #333;">
+<div id="container"></div>
+
+<div id="info" style="position: absolute; top: .5em; left: .5em; background-color: rgba(255, 255, 255, .8); padding: .3em;">
+<a href=https://peatix.com/event/3802789?lang=ja>電脳メガネサミット2024</a> 空間写真 for Quest/VisionPro with <a href="https://threejs.org" style="color: black !important;">three.js</a><br>
+<a href=https://github.com/code4fukui/spacialphoto-viewer>src on GitHub</a><br>
+</div>
+
+<style>
+body {
+  font-family: sans-serif;
+}
+a {
+  color: black !important;
+}
+</style>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://code4fukui.github.io/three.js/build/three.module.js",
+    "three/addons/": "https://code4fukui.github.io/three.js/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+//import { VRButton } from 'three/addons/webxr/VRButton.js';
+//import { ARButton } from 'three/addons/webxr/ARButton.js';
+import { XRButton } from './XRButton.js';
+import { createSpacialPhoto } from "./createSpacialPhoto.js";
+import { isVisionPro } from "./isVisionPro.js";
+
+//const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // alpha for AR
+//renderer.setClearColor(new THREE.Color(0xFDFDFD));
+//sceneの大きさの通知
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+
+// WebXR
+//document.body.appendChild(XRButton.createButton(renderer, { spaceType: "local-floor" }));
+document.body.appendChild(XRButton.createButton(renderer, { spaceType: "local" }));
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 100);
+
+camera.layers.enable(1); // render left view when no stereo available
+
+const offy = isVisionPro ? 1 : 0;
+
+const grp = new THREE.Group();
+
+const imgs = [
+  "IMG_0076", "IMG_0103", "IMG_0099", "IMG_0095"
+];
+
+const r = 1.1;
+const w = Math.PI * .47;
+for (let i = 0; i < imgs.length; i++) {
+  const img = imgs[i];
+  const photo = createSpacialPhoto(img);
+  const n = imgs.length - 1;
+  const th = (w / n) * (i - n / 2) - Math.PI / 2;
+	photo.position.x = Math.cos(th) * r;
+	photo.position.z = Math.sin(th) * r;
+	photo.rotation.y = Math.atan2(photo.position.x, photo.position.z) - Math.PI;
+  photo.position.y = offy;
+  scene.add(photo);
+}
+
+/*// スポッドライト(色, 光の強さ, 距離, 照射角, ボケ具合, 減衰率)
+const spotLight = new THREE.SpotLight(0xffffff);
+spotLight.position.set(1, 1, 4.5);
+spotLight.castShadow = true;
+scene.add(spotLight);
+*/
+
+container.appendChild(renderer.domElement);
+          
+function tick() {
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+}
+window.addEventListener("resize", onWindowResize);
+
+function animate() {
+  renderer.setAnimationLoop(render);
+}
+
+function render() {
+  tick();
+  renderer.render(scene, camera);
+}
+animate();
+
+</script>
+</body>
+
+</html>
+
